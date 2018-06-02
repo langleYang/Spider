@@ -63,15 +63,15 @@ def getList(x, y, tplt):
 def Htmlparser(lists, olist):
     try:
         for url in lists:
-            # print('/r 已完成{:.6}%'.format(100 * len(olist) / len(list)))
             r = getHtml(url).text
             soup = BeautifulSoup(r, 'lxml')
             s = soup.find('div', attrs={'class': 'pagenavi'}).find_all('span')[-2].string
             s = int(s)
-            mainim=soup.find('div', attrs={'class': 'main-image'})
+            mainim = soup.find('div', attrs={'class': 'main-image'})
             getImage(url, s, mainim)
             olist.append(url)
             sleep(random.randint(1, 5))
+            print('/r 已完成{:^6.4}%'.format(100 * len(olist) / len(lists)), end='')
     except:  # Exception as b:
         print('')
 
@@ -100,36 +100,36 @@ def getImage(url, s, mainim):
         img_origin = getHtml(img0, id2=dict(id, **{'Referer': pic}))
         if img_origin == 23:
             Errorlist.append(url)
-            getImage2(mainim,s,path1) #第二种路线
+            getImage2(mainim, s, path1)  # 第二种路线
         else:
-            savepic(path1,'01',img_origin)
+            savepic(path1, '01', img_origin)
             for i in range(2, s + 1):
                 no = str(i).rjust(qqq, '0')
-                img0 = pic_url +no + '.jpg'
+                img0 = pic_url + no + '.jpg'
                 img = getHtml(img0, id2=dict(id, **{'Referer': pic}))
-                pic_url1 = pic_url + no + '.jpg'
-                print(pic_url1)
-                savepic(path1,no,img)
+                savepic(path1, no, img)
                 sleep(1)
     except Exception as c:
         print(c)
 
-def getImage2(mainim,s,path1):
-    for n in range(s):
-        no= str(n).rjust(2, '0')
-        ia=mainim.find('a').attrs['href']
-        pic=mainim.find('img').attrs['src']
-        sleep(1.5)
-        img=getHtml(pic,id2=dict(id, **{'Referer': pic}))
-        savepic(path1,no, img)
-        sleep(1)
-        r=getHtml(ia).text
-        mainim=BeautifulSoup(r, 'lxml').find('div', attrs={'class': 'main-image'})
 
-def savepic(path1,b,img):
+def getImage2(mainim, s, path1):
+    for n in range(s):
+        no = str(n).rjust(2, '0')
+        ia = mainim.find('a').attrs['href']
+        pic = mainim.find('img').attrs['src']
+        sleep(1.5)
+        img = getHtml(pic, id2=dict(id, **{'Referer': pic}))
+        savepic(path1, no, img)
+        sleep(1)
+        r = getHtml(ia).text
+        mainim = BeautifulSoup(r, 'lxml').find('div', attrs={'class': 'main-image'})
+
+
+def savepic(path1, b, img):
     with open(path1 + '/' + b + '.jpg', 'wb') as pbj:
-            pbj.write(img.content)
-            pbj.close()
+        pbj.write(img.content)
+        pbj.close()
 
 
 def main():
