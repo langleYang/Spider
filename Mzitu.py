@@ -1,5 +1,7 @@
 # encoding:utf-8
 
+# what a mass !So many unordered ,confused and ambiguous Variables and lists.
+# lack of essential comments and organization.
 import os
 import requests
 import re
@@ -27,12 +29,14 @@ def getHtml(url, code='utf-8', id2=id):
 
 
 def getList(x, y, tplt):
-    Page_links = ['http://www.mzitu.com/page/{a}'.format(a=a) for a in range(x, y + 1)]
+    Page_links = [
+        'http://www.mzitu.com/page/{a}'.format(a=a) for a in range(x, y + 1)
+    ]
     img_urls = []
     path2 = path + 'log.txt'
     cnt = 0
     try:
-        with open(path2, 'a')as log:
+        with open(path2, 'a') as log:
             log.write('\n新的开始\n')
             for link in Page_links:
                 cnt = cnt + 1
@@ -65,19 +69,23 @@ def Htmlparser(lists, olist):
             for url in lists:
                 r = getHtml(url).text
                 soup = BeautifulSoup(r, 'lxml')
-                s = soup.find('div', attrs={'class': 'pagenavi'}).find_all('span')[-2].string
+                s = soup.find(
+                    'div', attrs={
+                        'class': 'pagenavi'
+                    }).find_all('span')[-2].string
                 s = int(s)
                 mainim = soup.find('div', attrs={'class': 'main-image'})
                 x = getImage(url, s, mainim)
                 if x == 11:
                     sleep(random.randint(1, 5))
                 else:
-                    cnte = 0
-                    for i in Errorlist:
-                        cnte = cnte + 1
+                    for cnte in range(0, len(Errorlist) + 1):
+                        cnte += 1
                         comlog.write('{:^3}\t{}\t{}\n'.format(cnte, url, x))
                 olist.append(url)
-                print('\r已完成{:^6.4}%'.format(100 * len(olist) / len(lists)), end='')
+                print(
+                    '\r已完成{:^6.4}%'.format(100 * len(olist) / len(lists)),
+                    end='')
         comlog.close()
     except:  # Exception as b:
         print('')
@@ -138,7 +146,8 @@ def getImage2(mainim, s, path1):
         savepic(path1, no, img)
         sleep(1)
         r = getHtml(ia).text
-        mainim = BeautifulSoup(r, 'lxml').find('div', attrs={'class': 'main-image'})
+        mainim = BeautifulSoup(r, 'lxml').find(
+            'div', attrs={'class': 'main-image'})
 
 
 def savepic(path1, b, img):
